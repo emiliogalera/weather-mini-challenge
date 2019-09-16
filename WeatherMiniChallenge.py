@@ -1,3 +1,4 @@
+"""Weather Mini Challenge from iClinic: https://github.com/iclinic/weather-mini-challenge"""
 
 # Request web content through api url
 import urllib.request as request
