@@ -126,7 +126,7 @@ if __name__ == "__main__":
     # days to use the umbrella
     umbrella_days = []
     for day in five_days_list:
-        if statistics.mean(humidity_data[day]) >= 70.0 and len(umbrella_days) < 3:
+        if statistics.mean(humidity_data[day]) >= 70.0:
             umbrella_days.append(day)
 
     if umbrella_days:
