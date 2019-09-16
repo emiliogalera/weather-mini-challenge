@@ -49,8 +49,8 @@ def json_data_fetsher(url: str) -> Dict[str, Any]:
     """Gets data from url and transfoms it to json, if possible"""
     try:
         page = request.urlopen(url)
-    except (ValueError, request.HTTPError):
-        raise ValueError("Not a valid URL!")
+    except request.HTTPError as error:
+        raise request.HTTPError(url, error.code, "Not a Valid URL!", error.hdrs, error.fp)
 
     try:
         page_string = page.read()
@@ -121,21 +121,22 @@ if __name__ == "__main__":
     # five days list from today
     today = datetime.datetime.today()
     five_days_list = generate_days_list(today)
-    
+
     # days to use the umbrella
     umbrella_days = []
     for day in five_days_list:
-        if statistics.mean(humidity_data[day]) >= 70.0:
+        if statistics.mean(humidity_data[day]) >= 70.0 and len(umbrella_days) < 3:
             umbrella_days.append(day)
 
     if umbrella_days:
         message = "You should take an umbrella in these days: "
         if len(umbrella_days) > 1:
             for uday in umbrella_days[:-1]:
-                message += f"{uday} "
-            message += f"and {umbrella_days[-1]}."
+                message += f"{uday}, "
+            message = message[:-2]
+            message += f" and {umbrella_days[-1]}."
         else:
-            message = f"You should take an umbrella only in {umbrella_days[0]}"
+            message = f"You should take an umbrella only on {umbrella_days[0]}"
         print(message)
     else:
         print(f"No umbrella needed for the next five days! {city} is a hot and dry city!")
